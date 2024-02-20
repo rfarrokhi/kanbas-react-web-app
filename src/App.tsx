@@ -7,15 +7,21 @@ import Labs2 from "./Labs/labs";
 
 import Kanbas from './Kanbas';
 import HelloWorld from './Labs/a3/hi';
+import {HashRouter} from "react-router-dom";
+import {Routes, Route, Navigate} from "react-router";
 
 function App() {
   return (
-    <div>
-      <h1>hello world!</h1>
-      <Labs />
-      <Kanbas />
-      <HelloWorld />
-    </div>    
+      <HashRouter>
+          <div>
+              <Routes>
+                  <Route path="/" element={<Navigate to="/Labs"/>}/>
+                  <Route path="/Labs/*" element={<Labs/>}/>
+                  <Route path="/Kanbas/*" element={<Kanbas/>}/>
+                  <Route path="/hello" element={<HelloWorld/>}/>
+              </Routes>
+          </div>
+      </HashRouter>
   );
 
     // <div className="App">

@@ -1,20 +1,20 @@
 const Navigations = [
-    {"kanbas-navigation": "/Kanbas/Navigations/kanbas_navigation.html"},
-    {"course-navigation": "/Kanbas/Navigations/course_navigation.html"},
-    {"account-navigation": "/Kanbas/Navigations/account_navigation.html"},
+    {"kanbas-navigation": "/Kanbas-old/Navigations/kanbas_navigation.html"},
+    {"course-navigation": "/Kanbas-old/Navigations/course_navigation.html"},
+    {"account-navigation": "/Kanbas-old/Navigations/account_navigation.html"},
 ]
 
 const KanbasNavigationPathList = [
-    {"Account": "/Kanbas/Account/Profile"},
-    {"Dashboard": "/Kanbas/Dashboard"},
-    {"Courses": "/Kanbas/Courses"},
+    {"Account": "/Kanbas-old/Account/Profile"},
+    {"Dashboard": "/Kanbas-old/Dashboard"},
+    {"Courses": "/Kanbas-old/Courses"},
 ]
 
 const CoursesNavigationPathList = [
-    {"Home": "/Kanbas/Courses/Home"},
-    {"Assignments": "/Kanbas/Courses/Assignments"},
-    {"Grades": "/Kanbas/Courses/Grades"},
-    {"Settings": "/Kanbas/Courses/Settings"},
+    {"Home": "/Kanbas-old/Courses/Home"},
+    {"Assignments": "/Kanbas-old/Courses/Assignments"},
+    {"Grades": "/Kanbas-old/Courses/Grades"},
+    {"Settings": "/Kanbas-old/Courses/Settings"},
 ]
 
 /**
