@@ -1,5 +1,4 @@
 import {useEffect, useState} from "react";
-import { courses } from "../../Kanbas/Database";
 import {Navigate, Route, Routes, useLocation, useParams} from "react-router-dom";
 import { FaBars, FaGlasses } from "react-icons/fa";
 import CourseNavigation from "./Navigation";
@@ -10,7 +9,8 @@ import CourseHome from "./Home";
 import Assignments from "./Assignments";
 import AssignmentEditor from "./Assignments/Editor";
 import Grades from "./Grades";
-function Courses() {
+import {Course} from "../Dashboard/CourseItem";
+function Courses({ courses }: { courses: Course[] }) {
 
     const { courseId } = useParams();
     const location = useLocation();

@@ -1,25 +1,59 @@
 import React from "react";
-import { Link, useParams } from "react-router-dom";
-import { assignments } from "../../Database";
+import {useParams} from "react-router-dom";
 import './index.css';
 import {FaCheckCircle, FaClipboard, FaEllipsisV, FaGripVertical} from "react-icons/fa";
+import {useSelector, useDispatch} from "react-redux";
+import {KanbasState} from "../../store";
+import {deleteAssignment, setAssignment} from "./assignmentsReducer";
+import {useNavigate} from "react-router-dom";
+import AssignmentDeleteDialog from "./AssignmentDeleteDialog";
+
 function AssignmentsList() {
-    const { courseId } = useParams();
-    const courseAssignments = assignments.filter(
-        (assignment) => assignment.course === courseId
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+
+    const {courseId} = useParams();
+
+    const [deletionDialogOpen, setDeletionDialogOpen] = React.useState(false);
+
+    const courseAssignments = useSelector((state: KanbasState) =>
+        state.assignmentsReducer.assignments.filter(
+            (assignment) => assignment.course === courseId
+        )
     );
 
+    const assignment = useSelector((state: KanbasState) =>
+        state.assignmentsReducer.assignment
+    );
+
+    function handleAssignmentClick(assignment: any) {
+        dispatch(setAssignment(assignment));
+        navigate(`/Kanbas/Courses/${courseId}/Assignments/${assignment._id}`);
+    }
+
+    function handleAssignmentDeleteClick(assignment: any) {
+        dispatch(setAssignment(assignment));
+        setDeletionDialogOpen(true);
+    }
+
+    function handleAssignmentDeletion() {
+        dispatch(deleteAssignment(assignment._id));
+        setDeletionDialogOpen(false);
+    }
+
     return (
-        <div style={{marginLeft:5}}>
+        <div style={{marginLeft: 5}}>
+            <AssignmentDeleteDialog assignment={assignment} open={deletionDialogOpen} handleDeletion={handleAssignmentDeletion} handleClose={()=> setDeletionDialogOpen(false)}/>
             <div className="row margin-top-20">
-                <div className="col-12 assignment-container d-flex align-items-center background-color-change custom-right-padding height left-pad">
+                <div
+                    className="col-12 assignment-container d-flex align-items-center background-color-change custom-right-padding height left-pad">
                     <div className="p-container background-color-change set-heading">
                         <i className="black-color"><FaGripVertical/></i>
                         <p className="assignment-title mb-0 custom-font-size margin-left-5">ASSIGNMENTS</p>
                     </div>
                     <div className="custom-left-padding">
                         <button className="oval-button background-color-change">40% of Total</button>
-                        <button className="background-color-change" style={{ border: 0 }}>+</button>
+                        <button className="background-color-change" style={{border: 0}}>+</button>
                         <i className="black-color"><FaEllipsisV/></i>
                     </div>
                 </div>
@@ -36,10 +70,8 @@ function AssignmentsList() {
                                     <i className="far fa-clipboard colorpad"><FaClipboard/></i>
                                 </button>
                             </div>
-                            <div>
-                                <Link to={`/Kanbas/Courses/${courseId}/Assignments/${assignment._id}`} className="set-font-style">
-                                    {assignment._id} - {assignment.title}
-                                </Link>
+                            <div onClick={() => handleAssignmentClick(assignment)} className={"set-font-style"}>
+                                {assignment._id} - {assignment.title}
                             </div>
                             <div className="margin-bottom-20 margin-left">
                                 <button type="button" className="button-setup" disabled>
@@ -48,13 +80,15 @@ function AssignmentsList() {
                                 <button type="button" className="button-setup">
                                     <i className="fas fa-ellipsis-v"><FaEllipsisV/></i>
                                 </button>
+                                <button onClick={()=> handleAssignmentDeleteClick(assignment)} className={"btn btn-sm btn-danger float-end"} style={{marginRight: 10}}>Delete</button>
                             </div>
                         </div>
-                        <hr />
+                        <hr/>
                     </div>
                 ))}
             </div>
         </div>
     );
 }
+
 export default AssignmentsList;
