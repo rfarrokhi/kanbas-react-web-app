@@ -9,15 +9,25 @@ import CourseHome from "./Home";
 import Assignments from "./Assignments";
 import AssignmentEditor from "./Assignments/Editor";
 import Grades from "./Grades";
-import {Course} from "../Dashboard/CourseItem";
-function Courses({ courses }: { courses: Course[] }) {
+import * as client from "../services/client";
+
+function Courses() {
 
     const { courseId } = useParams();
     const location = useLocation();
 
-    const course = courses.find((course) => course._id === courseId);
-    const activeNavigationItem = courseNavigationItems.find((item) => location.pathname.includes(item));
+    const [course, setCourse] = useState<any>({ _id: "" });
 
+
+    useEffect(() => {
+        client.fetchCourseById(courseId)
+            .then((course) => {
+                setCourse(course);
+            });
+    }, [courseId]);
+
+
+    const activeNavigationItem = courseNavigationItems.find((item) => location.pathname.includes(item));
     const [currentBreadcrumb, setCurrentBreadcrumb] = useState(activeNavigationItem);
 
     useEffect(() => {
@@ -60,3 +70,4 @@ function Courses({ courses }: { courses: Course[] }) {
 }
 
 export default Courses;
+

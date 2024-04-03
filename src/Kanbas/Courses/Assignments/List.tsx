@@ -1,12 +1,13 @@
-import React from "react";
+import React, {useEffect, useState} from "react";
 import {useParams} from "react-router-dom";
 import './index.css';
 import {FaCheckCircle, FaClipboard, FaEllipsisV, FaGripVertical} from "react-icons/fa";
 import {useSelector, useDispatch} from "react-redux";
 import {KanbasState} from "../../store";
-import {deleteAssignment, setAssignment} from "./assignmentsReducer";
+import {deleteAssignment, setAssignment, setAssignments} from "./assignmentsReducer";
 import {useNavigate} from "react-router-dom";
 import AssignmentDeleteDialog from "./AssignmentDeleteDialog";
+import * as client from "../../services/client";
 
 function AssignmentsList() {
     const dispatch = useDispatch();
@@ -14,17 +15,20 @@ function AssignmentsList() {
 
     const {courseId} = useParams();
 
-    const [deletionDialogOpen, setDeletionDialogOpen] = React.useState(false);
+    const courseAssignments = useSelector((state: KanbasState) => state.assignmentsReducer.assignments);
+    const assignment = useSelector((state: KanbasState) => state.assignmentsReducer.assignment);
 
-    const courseAssignments = useSelector((state: KanbasState) =>
-        state.assignmentsReducer.assignments.filter(
-            (assignment) => assignment.course === courseId
-        )
-    );
 
-    const assignment = useSelector((state: KanbasState) =>
-        state.assignmentsReducer.assignment
-    );
+    const [deletionDialogOpen, setDeletionDialogOpen] = useState(false);
+
+
+    useEffect(() => {
+        courseAssignments.length === 0 &&
+            client.getAssignmentsForCourse(courseId)
+                .then((assignments) => {
+                    dispatch(setAssignments(assignments));
+                });
+    }, []);
 
     function handleAssignmentClick(assignment: any) {
         dispatch(setAssignment(assignment));
@@ -37,6 +41,7 @@ function AssignmentsList() {
     }
 
     function handleAssignmentDeletion() {
+        client.deleteAssignment(assignment._id);
         dispatch(deleteAssignment(assignment._id));
         setDeletionDialogOpen(false);
     }
@@ -80,7 +85,7 @@ function AssignmentsList() {
                                 <button type="button" className="button-setup">
                                     <i className="fas fa-ellipsis-v"><FaEllipsisV/></i>
                                 </button>
-                                <button onClick={()=> handleAssignmentDeleteClick(assignment)} className={"btn btn-sm btn-danger float-end"} style={{marginRight: 10}}>Delete</button>
+                                <button onClick={() => handleAssignmentDeleteClick(assignment)} className={"btn btn-sm btn-danger float-end"} style={{marginRight: 10}}>Delete</button>
                             </div>
                         </div>
                         <hr/>

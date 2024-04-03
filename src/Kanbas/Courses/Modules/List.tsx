@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
 import "./index.css";
 import {FaCheckCircle, FaEllipsisV, FaPlus, FaCaretDown} from "react-icons/fa";
 import {RxDragHandleDots2} from "react-icons/rx";
@@ -10,8 +10,10 @@ import {
     deleteModule,
     updateModule,
     setModule,
+    setModules
 } from "./modulesReducer";
 import {KanbasState} from "../../store";
+import * as client from "../../services/client";
 
 function ModuleList() {
     const {courseId} = useParams();
@@ -22,18 +24,43 @@ function ModuleList() {
     const dispatch = useDispatch();
     const [selectedModule, setSelectedModule] = useState(moduleList[0]);
 
+    useEffect(() => {
+        client.findModulesForCourse(courseId)
+            .then((modules) =>
+                dispatch(setModules(modules))
+            );
+    }, [courseId]);
+
+
+    const handleAddModule = () => {
+        client.createModule(courseId, module).then((module) => {
+            dispatch(addModule(module));
+        });
+    };
+
+    const handleDeleteModule = (moduleId: string) => {
+        client.deleteModule(moduleId).then((status) => {
+            dispatch(deleteModule(moduleId));
+        });
+    };
+
+    const handleUpdateModule = async () => {
+        const status = await client.updateModule(module);
+        dispatch(updateModule(module));
+    };
+
     return (
         <div className="mb-3">
             <div className="module-form">
                 <button
                     className={"btn btn-success"}
-                    onClick={() => dispatch(addModule({...module, course: courseId}))}
+                    onClick={handleAddModule}
                 >
                     Add
                 </button>
                 <button
                     className={"btn btn-primary"}
-                    onClick={() => dispatch(updateModule(module))}>Update</button>
+                    onClick={handleUpdateModule}>Update</button>
                 <input
                     value={module.name}
                     onChange={(e) =>
@@ -54,7 +81,7 @@ function ModuleList() {
                             <ul onClick={() => setSelectedModule(module)} className="list-group module-groups">
                                 <li className="list-group-item list-group-item-secondary">
                                     <button className={"btn btn-danger btn-sm float-end"}
-                                            onClick={() => dispatch(deleteModule(module._id))}>
+                                            onClick={() => handleDeleteModule((module._id))}>
                                         Delete
                                     </button>
                                     <button style={{marginRight: 5}} className={"btn btn-success btn-sm float-end"}

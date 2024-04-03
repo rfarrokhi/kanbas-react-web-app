@@ -3,14 +3,27 @@ import {HiDotsVertical} from "react-icons/hi";
 import {FiEdit} from "react-icons/fi";
 import { MdDelete } from "react-icons/md";
 import './index.css';
+import {useEffect, useRef} from "react";
+import defaultImage from "../../Images/reactjs.png";
 
 function CourseItem({course, setCourse, deleteCourse}: { course: Course, setCourse: Function, deleteCourse: Function }) {
+
+    const courseImage = useRef();
+
+    useEffect(() => {
+        try {
+            courseImage.current = require(`../../Images/${course.image}`);
+        } catch (error) {
+            console.log("Image require failed ",error);
+        }
+    }, []);
+
     return (
         <div key={course._id} className="course-card col-md-3 col-lg-3">
             <div className="card">
                 <div className={`upper-half back-dblue`}>
                     <i className="dots"><HiDotsVertical/></i>
-                    <img width={254} height={146} src={require(`../../Images/${course.image}`)} alt={course.name}/>
+                    <img width={254} height={146} src={courseImage.current || defaultImage} alt={course.name}/>
                 </div>
                 <div className="lower-half">
                     <Link to={`/Kanbas/Courses/${course._id}`}>

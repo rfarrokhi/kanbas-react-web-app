@@ -1,5 +1,4 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { assignments } from "../../Database";
 const defaultNewAssignment = {
     title: "New Assignment",
     description: "",
@@ -10,7 +9,7 @@ const defaultNewAssignment = {
     untilDate: "",
 };
 const initialState = {
-    assignments: assignments,
+    assignments: Array<any>(),
     assignment: defaultNewAssignment,
 };
 const assignmentsSlice = createSlice({
@@ -40,11 +39,14 @@ const assignmentsSlice = createSlice({
         setAssignment: (state, action) => {
             state.assignment = action.payload;
         },
+        setAssignments: (state, action) => {
+            state.assignments = action.payload;
+        },
         resetAssignment: (state) => {
             state.assignment = defaultNewAssignment;
         }
     },
 });
 export const { addAssignment, deleteAssignment,
-    updateAssignment, setAssignment, resetAssignment } = assignmentsSlice.actions;
+    updateAssignment, setAssignment, setAssignments, resetAssignment } = assignmentsSlice.actions;
 export default assignmentsSlice.reducer;

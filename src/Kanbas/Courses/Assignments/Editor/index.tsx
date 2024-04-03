@@ -8,21 +8,22 @@ import {
     updateAssignment,
     addAssignment
 } from "../assignmentsReducer";
+import * as client from "../../../services/client";
 
 function AssignmentEditor({setBreadcrumb} : any) {
     const {courseId} = useParams();
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
-    const assignment = useSelector((state: KanbasState) =>
-        state.assignmentsReducer.assignment
-    );
+    const assignment = useSelector((state: KanbasState) => state.assignmentsReducer.assignment);
 
     const handleSave = () => {
         if (assignment._id) {
             dispatch(updateAssignment(assignment));
+            client.updateAssignment(assignment)
         } else {
             dispatch(addAssignment({ ...assignment, course: courseId }));
+            client.createAssignment(courseId, assignment)
         }
         navigate(`/Kanbas/Courses/${courseId}/Assignments`);
     };
