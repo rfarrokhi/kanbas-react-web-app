@@ -6,7 +6,7 @@ const request = axios.create();
 export const BASE_API = process.env.REACT_APP_BASE_API_URL || 'http://localhost:4000/api';
 
 //export const BASE_API = process.env.REACT_APP_BASE_API_URL;
-export const USERS_API = `${BASE_API}/api/users`;
+export const USERS_API = `${BASE_API}/users`;
 export interface User { _id: string; username: string; password: string; role: string;
 firstName: string, lastName: string };
 export const signin = async (credentials: User) => {
