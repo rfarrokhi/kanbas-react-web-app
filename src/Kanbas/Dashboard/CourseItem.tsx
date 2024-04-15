@@ -26,13 +26,13 @@ function CourseItem({course, setCourse, deleteCourse}: { course: Course, setCour
                     <img width={254} height={146} src={courseImage.current || defaultImage} alt={course.name}/>
                 </div>
                 <div className="lower-half">
-                    <Link to={`/Kanbas/Courses/${course._id}`}>
+                    <Link to={`/Kanbas/Courses/${course.id}`}>
                         <div className={`font-dblue`}>{course.name}</div>
                         <div className="course-number">{course.number}</div>
-                        <div className="course-term">{course.startDate} - {course.endDate}</div>
+                        <div className="course-term">{course.startDate.substring(0, 10)} - {course.endDate.substring(0, 10)}</div>
                         <button className={"btn btn-sm btn-danger float-end"} onClick={(event) => {
                             event.preventDefault();
-                            deleteCourse(course._id);
+                            deleteCourse(course.id);
                         }}>
                             <MdDelete />
                         </button>
@@ -53,6 +53,7 @@ export default CourseItem;
 
 export type Course = {
     _id: string;
+    id: string;
     name: string;
     number: string;
     startDate: string;

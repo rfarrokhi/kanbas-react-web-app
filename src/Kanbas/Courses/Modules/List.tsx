@@ -12,8 +12,10 @@ import {
     setModule,
     setModules
 } from "./modulesReducer";
+import {defaultModule} from "./modulesReducer";
 import {KanbasState} from "../../store";
 import * as client from "../../services/client";
+import {useSnackbar} from "notistack";
 
 function ModuleList() {
     const {courseId} = useParams();
@@ -23,6 +25,7 @@ function ModuleList() {
         state.modulesReducer.module);
     const dispatch = useDispatch();
     const [selectedModule, setSelectedModule] = useState(moduleList[0]);
+    const {enqueueSnackbar} = useSnackbar();
 
     useEffect(() => {
         client.findModulesForCourse(courseId)
@@ -33,8 +36,13 @@ function ModuleList() {
 
 
     const handleAddModule = () => {
+        if (module === defaultModule) {
+            enqueueSnackbar("Please enter module name and description.", {variant: "error"});
+            return;
+        }
         client.createModule(courseId, module).then((module) => {
             dispatch(addModule(module));
+            enqueueSnackbar("Module added successfully.", {variant: "success"});
         });
     };
 
@@ -45,8 +53,13 @@ function ModuleList() {
     };
 
     const handleUpdateModule = async () => {
+        if (module === defaultModule) {
+            enqueueSnackbar("Please select a module first.", {variant: "error"});
+            return;
+        }
         const status = await client.updateModule(module);
         dispatch(updateModule(module));
+        enqueueSnackbar("Module updated successfully.", {variant: "success"});
     };
 
     return (

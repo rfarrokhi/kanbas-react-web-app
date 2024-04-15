@@ -15,7 +15,7 @@ function Kanbas() {
 
     const [courses, setCourses] = useState<Course[]>([]);
     const [course, setCourse] = useState({
-        _id: "0", name: "New Course", number: "New Number",
+        _id: "0", id:"", name: "New Course", number: "New Number",
         startDate: "2023-09-10", endDate: "2023-12-15",
         image: "reactjs.png"
     });
@@ -34,12 +34,12 @@ function Kanbas() {
             `${COURSES_API}/${courseId}`
         );
         setCourses(courses.filter(
-            (c) => c._id !== courseId));
+            (c) => c.id !== courseId));
     };
 
     const updateCourse = async () => {
         const response = await axios.put(
-            `${COURSES_API}/${course._id}`,
+            `${COURSES_API}/${course.id}`,
             course
         );
         setCourses(
@@ -59,7 +59,7 @@ function Kanbas() {
                 <div style={{flexGrow: 1}}>
                     <Routes>
                         <Route path="/" element={<Navigate to="Dashboard"/>}/>
-                        <Route path="Account" element={<Account/>}/>
+                        <Route path="Account/*" element={<Account/>}/>
                         <Route path="Dashboard" element={
                             <Dashboard
                                 courses={courses}
